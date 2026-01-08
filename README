@@ -43,12 +43,13 @@ To launch the system run the command:
 ```
 docker-compose up
 ```
-credentials:
-user: admin ; password: admin_2026
-user: trader1 ; password: trader_pass_2026
+
 
 Once the terminal shows * Serving Flask app 'app', the system is live.
 open you web browser and go to: http://localhost:5000
 
+credentials:
+user: admin ; password: admin_2026
+user: trader1 ; password: trader_pass_2026
 
 
