@@ -1,18 +1,44 @@
-# Agri-Surplus Trader Portal (LogiTech)
-### Build2Break Hackathon - Team [Your Team Name]
+Agri-Surplus Intelligent Supply Chain Platform
 
-## 📌 Problem Statement
-Farmers often struggle to find immediate storage for surplus produce. This portal allows **Traders** to digitize collected crops and **automatically allocates** the nearest available warehouse based on real-time capacity, ensuring zero food wastage.
+Problem Statement(place holder)
 
-## 🛠 Tech Stack
-- **Backend:** Python (Flask)
-- **Database:** SQLite (with Parameterized Queries)
-- **Frontend:** Bootstrap 5, JavaScript (Fetch API)
-- **Containerization:** Docker & Docker Compose
+In india most of the farm produce is purchased by the G.O.I under M.S.P which amounts to 65 to 70 percent of the total produce in a region and the rest is left for the trading between private players 
+Private players are primarely driven by profit and buy the produce when it has low price
+There are multiple regions in india where the proper warehouse conditions are not met for the efficient storage of the goods 
+So the problem we have undertaken is efficient management of a multiple warehouses in different regions
+We receive the data regarding the details of the produce and farmer through a trader who is registered through the web we have created and store the data regarding the weight of the produce dynamically in one of the store houses close to the region which was registered for
+This information is then made available for the different traders
 
-## 🚀 How to Run
-1. Ensure Docker is installed.
-2. Open terminal in the project root.
-3. Run:
-   ```bash
-   docker-compose up --build
+Our Solution: We provide an Agent-Based Logistics Hub where Traders (acting as field agents) digitize surplus goods on-site. The platform uses a Smart Allocation Engine to instantly match surplus quantities with the nearest available warehouse, calculating real-time ETAs and optimal routes to ensure zero-waste logistics.
+
+Architecture Diagram
+The system follows a containerized Client-Server-Database architecture designed for modularity and rapid scaling.
+
+Component Breakdown:
+Frontend (UI/UX): Built with Bootstrap 5 and JavaScript. It utilizes the HTML5 Geolocation API for field coordinates and Leaflet.js for interactive rout mapping.
+Backend (Logic Engine): A Python Flask server that handles authentication, calculates Haversine distances, and executes the Optimal Allocation Algorithm.
+Database Layer: A central SQLite database storing persistent records of Traders, Warehouse capacities, and Order histories.
+Deployment: The entire stack is encapsulated in a Docker Container, ensuring it runs identically on any judge's machine.
+
+
+Project Summary
+The Agri-Surplus Hub is a "First-Mile" logistics optimizer. Its primary innovation lies in shifting the burden of technology from the farmer to the Trader.
+Intelligent Allocation: Instead of a simple list, the system automatically assigns a warehouse based on a 2-factor check: Geographic Proximity and Current Available Capacity.
+Logistics Transparency: Provides real-time ETA/ETD and distance metrics using simulated traffic variables to mimic real-world unpredictability.
+Infrastructure Oversight: The Admin Portal allows for the dynamic addition of new warehouses, creating a "Digital Twin" of the physical storage network.
+Security First: Implements password hashing and parameterized SQL queries to defend against common SL-1 vulnerabilities.
+
+
+How to run
+clone the github repository into your local directory
+Ensure Docker Desktop is installed and running on your machine get the Dockerfile and a docker-compose.yml file from the gdrive link and save it to the local directory.
+open terminal in the directory and run command :
+
+docker-compose build
+
+To launch the system run the command:
+
+docker-compose up
+
+Once the terminal shows * Serving Flask app 'app', the system is live.
+open you web browser and go to: http://localhost:5000
