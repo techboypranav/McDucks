@@ -34,11 +34,12 @@ clone the github repository into your local directory
 Ensure Docker Desktop is installed and running on your machine get the Dockerfile and a docker-compose.yml file from the gdrive link and save it to the local directory.
 open terminal in the directory and run command :
 
-docker-compose build
+$ docker-compose build
 
 To launch the system run the command:
 
-docker-compose up
+$ docker-compose up
 
 Once the terminal shows * Serving Flask app 'app', the system is live.
 open you web browser and go to: http://localhost:5000
+
