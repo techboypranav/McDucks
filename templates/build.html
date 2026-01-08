@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Farmer Dashboard</h2>
+    <a href="/" class="btn btn-outline-danger btn-sm">Logout</a>
+</div>
+
+<div class="card p-4 shadow-sm mb-4 border-start border-success border-4">
+    <h4>List Your Surplus Goods</h4>
+    <p class="text-muted">Sell leftover produce to buyers and arrange transport.</p>
+    <form action="/add_produce" method="POST">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Produce Details (Item Name)</label>
+                <input type="text" name="item" class="form-control" placeholder="e.g. Tomatoes" required>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Quantity (kg)</label>
+                <input type="number" name="quantity" class="form-control" min="1" required>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Price Expectation</label>
+                <input type="number" name="price" class="form-control" placeholder="₹ per kg">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Find Warehouse & Buyer</button>
+    </form>
+</div>
+{% endblock %}

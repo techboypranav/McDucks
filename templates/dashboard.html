@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Trader Dashboard</h1>
+        <p class="text-gray-500 mt-1">Real-time overview of surplus collections and logistics.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center space-x-4">
+            <div class="p-3 bg-blue-100 text-blue-600 rounded-lg"><i data-lucide="package-check" class="w-6 h-6"></i></div>
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Total Collections</p>
+                <p class="text-2xl font-bold text-gray-900" id="stat-total">--</p>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center space-x-4">
+            <div class="p-3 bg-amber-100 text-amber-600 rounded-lg"><i data-lucide="navigation" class="w-6 h-6"></i></div>
+            <div>
+                <p class="text-sm text-gray-500 font-medium">In-Transit</p>
+                <p class="text-2xl font-bold text-gray-900" id="stat-active">--</p>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center space-x-4">
+            <div class="p-3 bg-emerald-100 text-emerald-600 rounded-lg"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Total Volume (kg)</p>
+                <p class="text-2xl font-bold text-gray-900" id="stat-volume">--</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <i data-lucide="map" class="w-5 h-5 text-emerald-600"></i> Live Route Map
+        </h3>
+        <div id="map" class="h-80 w-full rounded-lg z-0 bg-gray-100 border border-gray-200"></div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                Live Shipments
+            </h2>
+            <span class="text-xs font-mono text-gray-400">SIMULATED GPS FEED</span>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4 font-semibold">Order ID</th>
+                        <th class="px-6 py-4 font-semibold">Farmer</th>
+                        <th class="px-6 py-4 font-semibold">Crop</th>
+                        <th class="px-6 py-4 font-semibold">Destination</th>
+                        <th class="px-6 py-4 font-semibold">ETA</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100" id="orders-table-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize Map
+    // ⚠️ This works now because <div id="map"> exists above
+    let map = L.map('map').setView([11.0168, 76.9558], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    let marker = null;
+
+    async function updateDashboard() {
+        try {
+            const response = await fetch('/api/stats');
+            const data = await response.json();
+
+            // Update Stats
+            document.getElementById('stat-total').innerText = data.total;
+            document.getElementById('stat-active').innerText = data.active;
+            document.getElementById('stat-volume').innerText = data.volume.toLocaleString();
+
+            // Update Table
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '';
+            
+            if(data.orders.length === 0) {
+                 tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">No active shipments in transit.</td></tr>`;
+            } else {
+                data.orders.forEach((order, index) => {
+                    const row = `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 font-mono text-sm text-emerald-700">#${order.id}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                            ${order.farmer_name}<br>
+                            <span class="text-xs text-gray-500 truncate w-32 block">${order.farmer_address}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">${order.crop} (${order.grade})</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                ${order.warehouse_name}
+                             </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-bold text-gray-700">${order.eta_mins} min</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+
+                    // Update map to show the MOST RECENT active order destination
+                    if (index === 0 && order.wh_lat) {
+                        if(marker) map.removeLayer(marker);
+                        marker = L.marker([order.wh_lat, order.wh_lng]).addTo(map)
+                            .bindPopup(`<b>${order.warehouse_name}</b><br>Incoming: ${order.quantity}kg`)
+                            .openPopup();
+                        
+                        map.setView([order.wh_lat, order.wh_lng], 10);
+                    }
+                });
+            }
+        } catch (e) { console.error("Poll Error", e); }
+    }
+
+    // Poll every 3 seconds
+    setInterval(updateDashboard, 3000);
+    updateDashboard(); // Initial call
+</script>
+{% endblock %}

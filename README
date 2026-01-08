@@ -1,0 +1,18 @@
+# Agri-Surplus Trader Portal (LogiTech)
+### Build2Break Hackathon - Team [Your Team Name]
+
+## 📌 Problem Statement
+Farmers often struggle to find immediate storage for surplus produce. This portal allows **Traders** to digitize collected crops and **automatically allocates** the nearest available warehouse based on real-time capacity, ensuring zero food wastage.
+
+## 🛠 Tech Stack
+- **Backend:** Python (Flask)
+- **Database:** SQLite (with Parameterized Queries)
+- **Frontend:** Bootstrap 5, JavaScript (Fetch API)
+- **Containerization:** Docker & Docker Compose
+
+## 🚀 How to Run
+1. Ensure Docker is installed.
+2. Open terminal in the project root.
+3. Run:
+   ```bash
+   docker-compose up --build

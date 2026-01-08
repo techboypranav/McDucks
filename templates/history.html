@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Collection History</h1>
+        <p class="text-gray-500 mt-1">Archive of all past surplus entries.</p>
+    </header>
+
+    <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Order ID</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Farmer</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Details</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Warehouse</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for order in orders %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 text-sm text-gray-500">{{ order.timestamp }}</td>
+                        <td class="px-6 py-4">
+                            <span class="font-mono text-sm text-emerald-700">#{{ order.id }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-900">{{ order.farmer_id }}</div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            {{ order.quantity }}kg {{ order.crop }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600 flex items-center gap-1">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i>
+                            {{ order.warehouse_name }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    {% if not orders %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-400">
+                            <div class="flex flex-col items-center justify-center">
+                                <i data-lucide="file-text" class="w-8 h-8 mb-2 opacity-50"></i>
+                                No orders found.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

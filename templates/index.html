@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">New Collection Order</h5>
+            </div>
+            <div class="card-body">
+                <div id="statusMessage" class="mb-3"></div>
+                
+                <form id="orderForm">
+                    <div class="mb-3">
+                        <label class="form-label">Farmer ID</label>
+                        <input type="text" id="farmer_id" class="form-control" placeholder="F-2026" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Crop Type</label>
+                        <select id="crop_type" class="form-select">
+                            <option value="Wheat">Wheat</option>
+                            <option value="Rice">Rice</option>
+                            <option value="Cotton">Cotton</option>
+                            <option value="Sugarcane">Sugarcane</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Quantity (Tons)</label>
+                        <input type="number" id="quantity" class="form-control" step="0.1" min="0.1" placeholder="0.0" required>
+                    </div>
+
+                    <button type="button" onclick="submitOrder()" class="btn btn-success w-100 py-2">
+                        📍 Locate & Allocate Nearest Warehouse
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-body p-0">
+                <div id="map" style="height: 500px; border-radius: 12px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 text-muted">Recent Dispatches</h6>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Farmer</th>
+                            <th>Crop</th>
+                            <th>Qty (T)</th>
+                            <th>Status</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>{{ order.farmer_id }}</td>
+                            <td>{{ order.crop_type }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td><span class="badge bg-success bg-opacity-75">{{ order.status }}</span></td>
+                            <td>{{ order.timestamp.strftime('%H:%M - %d %b') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
