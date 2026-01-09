@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = 'build2break_secure_key_2026'
+app.secret_key = os.environ.get('SECRET_KEY')
 DB_NAME = "supply_chain.db"
 
 # --- Config ---
