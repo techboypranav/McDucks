@@ -48,11 +48,32 @@ docker-compose up
 Once the terminal shows * Serving Flask app 'app', the system is live.
 open you web browser and go to: http://localhost:5000
 
+Folder Strucure:
+
+/McDucks/                  <-- Root Project Folder
+│
+├── .env                   
+├── .gitignore             
+├── app.py                 
+├── docker-compose.yml     
+├── Dockerfile             
+├── requirements.txt       
+├── schema.sql             
+│
+└── templates/             
+    ├── admin.html         
+    ├── base.html          
+    ├── dashboard.html     
+    ├── history.html       
+    ├── login.html         
+    └── new_order.html     
+
 credentials:
 user: admin ; password: admin_2026
 user: trader1 ; password: trader_pass_2026
 
 
 video explaination:https://vimeo.com/1152639319?share=copy&fl=sv&fe=ci
+
 
 
